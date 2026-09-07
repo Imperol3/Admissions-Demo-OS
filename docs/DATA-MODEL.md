@@ -52,6 +52,30 @@ The design principle is:
 
 > Keep the structured representation and the retrieval representation separate until real demo behaviour proves that one is redundant.
 
+## Runtime source-of-truth clarification
+
+For the first demo implementation, the **answer-generation path should treat `knowledge_chunks` as the primary evidence source**.
+
+`programmes` and `programme_facts` are supporting structured representations. They may be used for exact lookup, entity resolution, validation or UI purposes, but an AI-generated response should still be grounded in source-linked evidence from `knowledge_chunks` unless we deliberately change that rule later.
+
+This gives us a clean test:
+
+```text
+Student question
+   ↓
+Retrieval Tool
+   ↓
+knowledge_chunks
+   ↓
+source-linked evidence
+   ↓
+Admissions Brain
+   ↓
+answer
+```
+
+Structured tables can assist this flow, but they should not silently become a second competing answer source.
+
 ---
 
 # Relationship overview
