@@ -1,5 +1,6 @@
 -- Optional example seed for validating the bootstrap.
 -- Run only after 001_init_admissions_demo_os.sql.
+-- Example institution: University of Nairobi (Kenya public university).
 
 insert into public.demo_tenants (
   slug,
@@ -9,14 +10,14 @@ insert into public.demo_tenants (
   config
 )
 values (
-  'example-institution',
-  'Example Institution',
-  'https://example.edu',
+  'university-of-nairobi',
+  'University of Nairobi',
+  'https://www.uonbi.ac.ke',
   'created',
   '{
     "country": "Kenya",
     "default_currency": "KES",
-    "institution_type": "university",
+    "institution_type": "public_university",
     "reply_mode": "draft_only"
   }'::jsonb
 )
