@@ -13,6 +13,42 @@ It creates the current Admissions Demo OS schema:
 7. `demo_runs`
 8. `demo_evaluations`
 
+## Fast demo chunk staging
+
+For the current Google Sheet onboarding workflow, use:
+
+```text
+sql/004_demo_chunk_staging.sql
+```
+
+This creates a lightweight `demo_chunk_staging` table with no foreign-key dependency on the rest of the demo model.
+
+It is intended for the fastest working path:
+
+```text
+Onboarding Google Sheet
+        ↓
+Chunk Prep
+        ↓
+content → embedding model
+        ↓
+content + metadata + embedding
+        ↓
+demo_chunk_staging
+```
+
+The script includes a real RCM CPA sample row showing the expected structure.
+
+Important conventions:
+
+- `content` is the text sent to the embedding model.
+- `embedding` stores the resulting `vector(1536)`.
+- commonly inspected fields such as `chunk_key`, `institution_id`, `category`, `entity_type`, `entity_name` and `page_url` stay as normal columns.
+- supporting provenance/review information such as `keywords`, `source_urls`, `source_tabs`, `review_status` and `notes` lives in `metadata jsonb`.
+- only approved/publish-ready rows should eventually be exposed to production/demo retrieval.
+
+This staging table is deliberately simple. It lets us validate the Sheet → chunks → embeddings → retrieval flow before deciding how much of it should be merged into the main `knowledge_chunks` model.
+
 ## Demo-first source storage
 
 There is intentionally **no `source_page_versions` table**.
