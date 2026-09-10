@@ -1,5 +1,27 @@
 # n8n Workflow Contracts
 
+## Registered core workflows
+
+These existing n8n workflows were designated as core Admissions OS demo workflows on 2026-09-10.
+
+| Workflow | n8n ID | Editor link | Repository export |
+| --- | --- | --- | --- |
+| Core workflow (exact n8n name and responsibilities pending inspection) | `TM18CmeRj8bKxNDt` | [Open core workflow](https://dev.funautomations.io/workflow/TM18CmeRj8bKxNDt) | Pending |
+| Retrieval workflow | `N1rELqBurXmIponP` | [Open retrieval workflow](https://dev.funautomations.io/workflow/N1rELqBurXmIponP) | Pending |
+
+The links above open the n8n editor; they are not webhook endpoints.
+
+### Export and verification status
+
+Both workflow reads on 2026-09-10 returned: “Workflow is not available in MCP.” Their definitions, current names, activation state, inputs, outputs and connections have therefore not been inspected or exported. The contracts below remain design targets; they do not establish the current behaviour of these workflows.
+
+To complete the repository snapshots:
+
+1. Enable MCP access for each workflow from its workflow card or settings, or provide its downloaded n8n JSON export.
+2. Inspect the definitions and record the actual names, responsibilities, inputs, outputs, dependencies and source version.
+3. Save sanitized JSON snapshots under `workflows/n8n/`, excluding credentials, hardcoded secrets and pinned email/test data.
+4. Document credential setup and remap any sub-workflow references when importing into another n8n instance.
+
 ## Purpose
 
 The demo runtime should be built from a small number of reusable workflows rather than institution-specific automations.
