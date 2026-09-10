@@ -2,25 +2,16 @@
 
 ## Registered core workflows
 
-These existing n8n workflows were designated as core Admissions OS demo workflows on 2026-09-10.
+The core workflow definitions were inspected and exported on **2026-09-10**.
 
-| Workflow | n8n ID | Editor link | Repository export |
-| --- | --- | --- | --- |
-| Core workflow (exact n8n name and responsibilities pending inspection) | `TM18CmeRj8bKxNDt` | [Open core workflow](https://dev.funautomations.io/workflow/TM18CmeRj8bKxNDt) | Pending |
-| Retrieval workflow | `N1rELqBurXmIponP` | [Open retrieval workflow](https://dev.funautomations.io/workflow/N1rELqBurXmIponP) | Pending |
+| Workflow | Repository snapshot |
+| --- | --- |
+| Admissions OS — Gmail intake, classification, response and review logging | [admissions-os.json](../workflows/n8n/admissions-os.json) |
+| read the embeddings data — tenant-scoped semantic retrieval | [retrieval.json](../workflows/n8n/retrieval.json) |
 
-The links above open the n8n editor; they are not webhook endpoints.
+The main workflow's `retrieve data` tool calls the retrieval workflow. Both source workflows were active at export; repository imports are inactive and exclude credential bindings and pinned data.
 
-### Export and verification status
-
-Both workflow reads on 2026-09-10 returned: “Workflow is not available in MCP.” Their definitions, current names, activation state, inputs, outputs and connections have therefore not been inspected or exported. The contracts below remain design targets; they do not establish the current behaviour of these workflows.
-
-To complete the repository snapshots:
-
-1. Enable MCP access for each workflow from its workflow card or settings, or provide its downloaded n8n JSON export.
-2. Inspect the definitions and record the actual names, responsibilities, inputs, outputs, dependencies and source version.
-3. Save sanitized JSON snapshots under `workflows/n8n/`, excluding credentials, hardcoded secrets and pinned email/test data.
-4. Document credential setup and remap any sub-workflow references when importing into another n8n instance.
+See the [snapshot guide](../workflows/n8n/README.md) for actual behaviour, inputs, dependencies, import instructions and observed gaps, and the [manifest](../workflows/n8n/manifest.json) for source versions. The contracts below are design targets; the snapshots document the current implementation, which does not yet implement every target.
 
 ## Purpose
 

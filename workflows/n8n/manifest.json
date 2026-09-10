@@ -1,0 +1,140 @@
+{
+  "workflows": [
+    {
+      "file": "admissions-os.json",
+      "source_workflow_id": "TM18CmeRj8bKxNDt",
+      "source_name": "Admissions OS",
+      "source_version_id": "fa17c864-3b48-485c-b1df-1ee3f22bd888",
+      "source_active_version_id": "fa17c864-3b48-485c-b1df-1ee3f22bd888",
+      "source_active": true,
+      "source_updated_at": "2026-09-10T06:10:12.131Z",
+      "exported_on": "2026-09-10",
+      "export_source": "n8n MCP get_workflow_details; current saved nodes and connections",
+      "node_count": 25,
+      "credential_bindings_to_configure": [
+        {
+          "node": "OpenRouter Chat Model",
+          "types": [
+            "openRouterApi"
+          ]
+        },
+        {
+          "node": "Postgres Chat Memory",
+          "types": [
+            "postgres"
+          ]
+        },
+        {
+          "node": "Gmail Trigger",
+          "types": [
+            "gmailOAuth2"
+          ]
+        },
+        {
+          "node": "Get a message",
+          "types": [
+            "gmailOAuth2"
+          ]
+        },
+        {
+          "node": "Reply to a message",
+          "types": [
+            "gmailOAuth2"
+          ]
+        },
+        {
+          "node": "log email",
+          "types": [
+            "googleSheetsOAuth2Api"
+          ]
+        },
+        {
+          "node": "log responses",
+          "types": [
+            "googleSheetsOAuth2Api"
+          ]
+        },
+        {
+          "node": "log email needs human_review",
+          "types": [
+            "googleSheetsOAuth2Api"
+          ]
+        },
+        {
+          "node": "log autosent email",
+          "types": [
+            "googleSheetsOAuth2Api"
+          ]
+        },
+        {
+          "node": "Mark a message as read",
+          "types": [
+            "gmailOAuth2"
+          ]
+        },
+        {
+          "node": "OpenRouter Chat Model1",
+          "types": [
+            "openRouterApi"
+          ]
+        }
+      ],
+      "source_error_workflow_id": "wgIupwopCVUf5TLs",
+      "sanitization": [
+        "Removed node credential bindings and webhook IDs",
+        "Excluded source workflow ID, version IDs and access metadata from import JSON",
+        "Excluded pinned data and execution state",
+        "Set export active=false",
+        "Removed source MCP visibility and error workflow setting"
+      ],
+      "validation": {
+        "json_roundtrip": true,
+        "connection_references_valid": true,
+        "saved_nodes_match_active_nodes": true,
+        "saved_connections_match_active_connections": true,
+        "executed": false
+      }
+    },
+    {
+      "file": "retrieval.json",
+      "source_workflow_id": "N1rELqBurXmIponP",
+      "source_name": "read the embeddings data",
+      "source_version_id": "26e6141d-a319-4e2c-abf4-566b8ea45a6a",
+      "source_active_version_id": "26e6141d-a319-4e2c-abf4-566b8ea45a6a",
+      "source_active": true,
+      "source_updated_at": "2026-09-10T06:10:12.131Z",
+      "exported_on": "2026-09-10",
+      "export_source": "n8n MCP get_workflow_details; current saved nodes and connections",
+      "node_count": 6,
+      "credential_bindings_to_configure": [
+        {
+          "node": "embedd email",
+          "types": [
+            "openRouterApi"
+          ]
+        },
+        {
+          "node": "Execute a SQL query",
+          "types": [
+            "postgres"
+          ]
+        }
+      ],
+      "source_error_workflow_id": "wgIupwopCVUf5TLs",
+      "sanitization": [
+        "Removed node credential bindings and webhook IDs",
+        "Excluded source workflow ID, version IDs and access metadata from import JSON",
+        "Excluded pinned data and execution state",
+        "Set export active=false",
+        "Removed source MCP visibility and error workflow setting"
+      ],
+      "validation": {
+        "json_roundtrip": true,
+        "connection_references_valid": true,
+        "saved_nodes_match_active_nodes": true,
+        "saved_connections_match_active_connections": true,
+        "executed": false
+      }
+    }
+  ]
+}

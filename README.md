@@ -113,6 +113,8 @@ The surrounding infrastructure may be simulated initially. For example, an email
 
 ## Core workflows
 
+The existing **Admissions OS** email workflow and **read the embeddings data** retrieval workflow are versioned in [`workflows/n8n/`](workflows/n8n/README.md), with JSON snapshots, source versions, setup instructions and implementation notes.
+
 The first version is intentionally small:
 
 1. **DEMO — Create Institution**  

@@ -1,0 +1,197 @@
+{
+  "name": "read the embeddings data",
+  "nodes": [
+    {
+      "id": "58f4a184-477a-4e31-8dee-6a4156b65a70",
+      "name": "Edit Fields",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a4eb18c3-d101-48c3-980d-24a8f44036b8",
+              "name": "query",
+              "type": "string",
+              "value": "={{ $json.query }}"
+            },
+            {
+              "id": "0b3efa7b-f850-410a-9fcc-a98f58a5fb3f",
+              "name": "tenant_id",
+              "type": "string",
+              "value": "={{ $json.tenant_id }}"
+            },
+            {
+              "id": "fc8c22c5-5356-464c-bbea-289db53a4ed6",
+              "name": "institution_name",
+              "type": "string",
+              "value": "={{ $json.institution_name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "position": [
+        240,
+        0
+      ],
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5
+    },
+    {
+      "id": "2f0c2378-8064-4c50-bb9f-17ba22e5dcf0",
+      "name": "embedd email",
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "HTTP-Referer",
+              "value": "https://your-web-app-url"
+            },
+            {
+              "name": "X-Title",
+              "value": "Admissions OS"
+            }
+          ]
+        },
+        "jsonBody": "={\n  \"model\": \"openai/text-embedding-3-small\",\n  \"input\": \n    {{ $json.query.toJsonString()}}\n  ,\n  \"dimensions\": 1536\n}",
+        "method": "POST",
+        "nodeCredentialType": "openRouterApi",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "https://openrouter.ai/api/v1/embeddings"
+      },
+      "position": [
+        448,
+        0
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5
+    },
+    {
+      "id": "29a05e24-ba4a-4315-bfd2-36d5058cf015",
+      "name": "Execute a SQL query",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ '[' + $json.data[0].embedding.join(',') + ']' }}, {{ $('Edit Fields').item.json.tenant_id }}"
+        },
+        "query": "SELECT\n    id,\n    institution_id,\n    category,\n    content,\n    metadata,\n    1 - (embedding <=> $1::vector) AS score\n\nFROM demo_chunk_staging\n\nWHERE institution_id = $2\n  AND embedding IS NOT NULL\n\nORDER BY embedding <=> $1::vector\n\nLIMIT 5;"
+      },
+      "position": [
+        688,
+        0
+      ],
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7
+    },
+    {
+      "id": "e1b3ab1c-6a76-4ee0-86b0-a35ed57f5500",
+      "name": "Prepare Context",
+      "parameters": {
+        "jsCode": "const chunks = $input.all();\n\nconst context = chunks\n  .map((item, i) => {\n    const c = item.json;\n\n    return [\n      `SOURCE ${i + 1}`,\n      `Category: ${c.category || 'unknown'}`,\n      `Score: ${c.score ?? 'unknown'}`,\n      `Content: ${c.content}`\n    ].join('\\n');\n  })\n  .join('\\n\\n');\n\nreturn [{\n  json: {\n    context\n  }\n}];"
+      },
+      "position": [
+        1184,
+        0
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "665b1042-398b-4706-b6bb-0605f6e659b3",
+      "name": "When Executed by Another Workflow",
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query",
+              "type": "any"
+            },
+            {
+              "name": "tenant_id",
+              "type": "any"
+            },
+            {
+              "name": "institution_name",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "position": [
+        0,
+        0
+      ],
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "c43154b4-43c8-45bf-bb0b-ef8536b5fefc",
+      "name": "Aggregate",
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "position": [
+        912,
+        0
+      ],
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "embedd email",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Aggregate",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Edit Fields",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "embedd email": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Execute a SQL query",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {}
+}
