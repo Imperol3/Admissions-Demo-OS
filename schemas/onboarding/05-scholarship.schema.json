@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/05-scholarship.schema.json",
+  "title": "Canonical Scholarship",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "source_id",
+    "source_evidence",
+    "is_current",
+    "data_status",
+    "review_status",
+    "scholarship_id",
+    "scholarship_name",
+    "eligibility"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "source_id": {
+      "$ref": "00-common.schema.json#/$defs/sourceId"
+    },
+    "source_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "is_current": {
+      "type": "boolean"
+    },
+    "data_status": {
+      "$ref": "00-common.schema.json#/$defs/dataStatus"
+    },
+    "review_status": {
+      "$ref": "00-common.schema.json#/$defs/reviewStatus"
+    },
+    "approved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scholarship_id": {
+      "type": "string"
+    },
+    "programme_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scholarship_name": {
+      "type": "string"
+    },
+    "scholarship_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "eligibility": {
+      "type": "string"
+    },
+    "amount_or_benefit": {
+      "type": [
+        "number",
+        "string",
+        "null"
+      ]
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "coverage_notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "application_open_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "deadline": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "application_process": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "application_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
