@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/05-faq-policy.schema.json",
+  "title": "Canonical FAQ or Policy",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "source_id",
+    "source_evidence",
+    "is_current",
+    "data_status",
+    "review_status",
+    "knowledge_item_id",
+    "category",
+    "item_type",
+    "question_or_policy",
+    "approved_answer_or_rule",
+    "response_action"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "source_id": {
+      "$ref": "00-common.schema.json#/$defs/sourceId"
+    },
+    "source_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "is_current": {
+      "type": "boolean"
+    },
+    "data_status": {
+      "$ref": "00-common.schema.json#/$defs/dataStatus"
+    },
+    "review_status": {
+      "$ref": "00-common.schema.json#/$defs/reviewStatus"
+    },
+    "approved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "knowledge_item_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "faq",
+        "policy"
+      ]
+    },
+    "scope_entity_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scope_entity_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "question_or_policy": {
+      "type": "string"
+    },
+    "approved_answer_or_rule": {
+      "type": "string"
+    },
+    "response_action": {
+      "type": "string",
+      "enum": [
+        "answer",
+        "answer_with_caveat",
+        "human_review",
+        "ticket_escalation",
+        "do_not_answer"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
