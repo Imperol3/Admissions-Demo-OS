@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/06-readiness.schema.json",
+  "title": "Stage 6 - Onboarding Readiness Contract",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "status",
+    "programme_results",
+    "institution_result"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "status": {
+      "$ref": "00-common.schema.json#/$defs/stageStatus"
+    },
+    "programme_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "programme_id",
+          "checks",
+          "blocking_gaps",
+          "warning_gaps",
+          "ready_for_publish"
+        ],
+        "properties": {
+          "programme_id": {
+            "type": "string"
+          },
+          "programme_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checks": {
+            "type": "object",
+            "required": [
+              "identity_complete",
+              "duration_complete",
+              "study_delivery_mode_complete",
+              "fee_complete",
+              "current_intake_complete",
+              "requirements_complete",
+              "application_process_complete",
+              "sources_verified",
+              "conflicts_resolved",
+              "kb_tests_passed"
+            ],
+            "properties": {
+              "identity_complete": {
+                "type": "boolean"
+              },
+              "duration_complete": {
+                "type": "boolean"
+              },
+              "study_delivery_mode_complete": {
+                "type": "boolean"
+              },
+              "fee_complete": {
+                "type": "boolean"
+              },
+              "current_intake_complete": {
+                "type": "boolean"
+              },
+              "requirements_complete": {
+                "type": "boolean"
+              },
+              "application_process_complete": {
+                "type": "boolean"
+              },
+              "contact_or_location_complete": {
+                "type": "boolean"
+              },
+              "policy_or_faq_coverage": {
+                "type": "boolean"
+              },
+              "sources_verified": {
+                "type": "boolean"
+              },
+              "conflicts_resolved": {
+                "type": "boolean"
+              },
+              "kb_tests_passed": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "blocking_gaps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "reason"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "field": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "warning_gaps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "reason"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "field": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "ready_for_publish": {
+            "type": "boolean"
+          },
+          "reviewer": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reviewed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "institution_result": {
+      "type": "object",
+      "required": [
+        "unresolved_blocking_conflicts",
+        "required_tests_passed",
+        "knowledge_published",
+        "embeddings_complete",
+        "routing_tests_passed",
+        "human_approval",
+        "ready"
+      ],
+      "properties": {
+        "unresolved_blocking_conflicts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required_tests_passed": {
+          "type": "boolean"
+        },
+        "knowledge_published": {
+          "type": "boolean"
+        },
+        "embeddings_complete": {
+          "type": "boolean"
+        },
+        "routing_tests_passed": {
+          "type": "boolean"
+        },
+        "human_approval": {
+          "type": "boolean"
+        },
+        "ready": {
+          "type": "boolean"
+        },
+        "blocking_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "00-common.schema.json#/$defs/error"
+      }
+    }
+  },
+  "additionalProperties": false
+}
