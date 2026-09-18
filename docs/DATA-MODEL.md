@@ -37,6 +37,27 @@ Version history, diffing and rollback can be introduced later in the production 
 
 ---
 
+# Onboarding extraction contract
+
+The physical demo schema below is intentionally lightweight. The authoritative onboarding transformation contract now lives in:
+
+- [onboarding extraction pipeline](onboarding/EXTRACTION-PIPELINE.md)
+- [extracted facts staging model](onboarding/EXTRACTED-FACTS.md)
+- [canonical data model](onboarding/CANONICAL-DATA-MODEL.md)
+- [onboarding JSON Schemas](../schemas/onboarding/README.md)
+
+The contract distinguishes three layers:
+
+```text
+source_pages -> extracted_facts -> canonical records -> knowledge_chunks
+```
+
+`extracted_facts` is the recommended staging/audit layer between page extraction and canonical truth. The current demo database may continue using `programmes` + `programme_facts` as its compact physical representation while the workflow contracts are implemented. A database migration should be added when the staging persistence is wired into the runtime.
+
+The canonical contract uses both `tenant_id` (runtime isolation) and `institution_id` (business/canonical identity); these are not interchangeable.
+
+---
+
 # Tables
 
 The current schema has 7 core tables plus one optional evaluation table:
