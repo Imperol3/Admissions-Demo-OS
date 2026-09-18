@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/05-intake.schema.json",
+  "title": "Canonical Intake",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "source_id",
+    "source_evidence",
+    "is_current",
+    "data_status",
+    "review_status",
+    "intake_id",
+    "programme_id",
+    "intake_status",
+    "availability_status"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "source_id": {
+      "$ref": "00-common.schema.json#/$defs/sourceId"
+    },
+    "source_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "is_current": {
+      "type": "boolean"
+    },
+    "data_status": {
+      "$ref": "00-common.schema.json#/$defs/dataStatus"
+    },
+    "review_status": {
+      "$ref": "00-common.schema.json#/$defs/reviewStatus"
+    },
+    "approved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "intake_id": {
+      "type": "string"
+    },
+    "programme_id": {
+      "type": "string"
+    },
+    "intake_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "academic_year": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "application_open_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "application_deadline": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "start_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "end_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "intake_status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "applications_open",
+        "applications_closed",
+        "upcoming",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "availability_status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "closed",
+        "waitlist",
+        "full",
+        "unknown"
+      ]
+    },
+    "campus_or_location": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "study_mode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "delivery_mode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_verified_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
