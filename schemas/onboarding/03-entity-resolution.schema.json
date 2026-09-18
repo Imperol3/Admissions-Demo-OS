@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/03-entity-resolution.schema.json",
+  "title": "Stage 3 - Entity Resolution Contract",
+  "type": "object",
+  "required": [
+    "input",
+    "output"
+  ],
+  "properties": {
+    "input": {
+      "type": "object",
+      "required": [
+        "tenant_id",
+        "institution_id",
+        "onboarding_run_id",
+        "candidate_entity",
+        "existing_entities"
+      ],
+      "properties": {
+        "tenant_id": {
+          "$ref": "00-common.schema.json#/$defs/tenantId"
+        },
+        "institution_id": {
+          "$ref": "00-common.schema.json#/$defs/institutionId"
+        },
+        "onboarding_run_id": {
+          "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+        },
+        "candidate_entity": {
+          "type": "object",
+          "required": [
+            "temporary_entity_id",
+            "entity_type",
+            "name"
+          ],
+          "properties": {
+            "temporary_entity_id": {
+              "type": "string"
+            },
+            "entity_type": {
+              "type": "string",
+              "enum": [
+                "institution",
+                "programme",
+                "fee",
+                "intake",
+                "requirement",
+                "application_step",
+                "faq_policy",
+                "contact_location",
+                "scholarship"
+              ]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "aliases": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "context": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "supporting_fact_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "existing_entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "canonical_entity_id",
+              "entity_type",
+              "name"
+            ],
+            "properties": {
+              "canonical_entity_id": {
+                "type": "string"
+              },
+              "entity_type": {
+                "type": "string",
+                "enum": [
+                  "institution",
+                  "programme",
+                  "fee",
+                  "intake",
+                  "requirement",
+                  "application_step",
+                  "faq_policy",
+                  "contact_location",
+                  "scholarship"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "context": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "status",
+        "temporary_entity_id",
+        "resolution",
+        "match_confidence",
+        "new_aliases",
+        "warnings",
+        "errors"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "00-common.schema.json#/$defs/stageStatus"
+        },
+        "temporary_entity_id": {
+          "type": "string"
+        },
+        "resolution": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "new_entity",
+            "ambiguous",
+            "needs_review"
+          ]
+        },
+        "canonical_entity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "canonical_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "match_confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "new_aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "candidate_matches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "canonical_entity_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "canonical_entity_id",
+              "name",
+              "score"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "reasoning_summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "00-common.schema.json#/$defs/error"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
