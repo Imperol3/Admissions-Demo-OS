@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/05-application-process.schema.json",
+  "title": "Canonical Application Process Step",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "source_id",
+    "source_evidence",
+    "is_current",
+    "data_status",
+    "review_status",
+    "process_step_id",
+    "step_number",
+    "step_name",
+    "instructions"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "source_id": {
+      "$ref": "00-common.schema.json#/$defs/sourceId"
+    },
+    "source_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "is_current": {
+      "type": "boolean"
+    },
+    "data_status": {
+      "$ref": "00-common.schema.json#/$defs/dataStatus"
+    },
+    "review_status": {
+      "$ref": "00-common.schema.json#/$defs/reviewStatus"
+    },
+    "approved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "process_step_id": {
+      "type": "string"
+    },
+    "programme_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "intake_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "step_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "step_name": {
+      "type": "string"
+    },
+    "instructions": {
+      "type": "string"
+    },
+    "application_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "documents_needed": {
+      "type": [
+        "string",
+        "array",
+        "null"
+      ]
+    },
+    "application_fee_amount": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "application_fee_currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "responsible_contact": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
