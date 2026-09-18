@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/01-source-classification.schema.json",
+  "title": "Stage 1 - Source Classification Contract",
+  "type": "object",
+  "required": [
+    "input",
+    "output"
+  ],
+  "properties": {
+    "input": {
+      "type": "object",
+      "required": [
+        "tenant_id",
+        "institution_id",
+        "onboarding_run_id",
+        "source_id",
+        "url",
+        "content"
+      ],
+      "properties": {
+        "tenant_id": {
+          "$ref": "00-common.schema.json#/$defs/tenantId"
+        },
+        "institution_id": {
+          "$ref": "00-common.schema.json#/$defs/institutionId"
+        },
+        "onboarding_run_id": {
+          "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+        },
+        "source_id": {
+          "$ref": "00-common.schema.json#/$defs/sourceId"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "page_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_type": {
+          "type": "string",
+          "enum": [
+            "html",
+            "text",
+            "markdown",
+            "pdf_text",
+            "document_text",
+            "other"
+          ]
+        },
+        "scraped_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "status",
+        "source_id",
+        "page_type",
+        "information_types_found",
+        "relevant",
+        "authority_level",
+        "extractor_scope",
+        "warnings",
+        "errors"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "00-common.schema.json#/$defs/stageStatus"
+        },
+        "source_id": {
+          "$ref": "00-common.schema.json#/$defs/sourceId"
+        },
+        "page_type": {
+          "type": "string",
+          "enum": [
+            "institution",
+            "programme",
+            "programme_list",
+            "fees",
+            "admissions",
+            "requirements",
+            "intakes",
+            "application",
+            "faq",
+            "policy",
+            "contact",
+            "scholarship",
+            "campus",
+            "accommodation",
+            "international_students",
+            "mixed",
+            "general",
+            "other",
+            "irrelevant"
+          ]
+        },
+        "information_types_found": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "institution",
+              "programme",
+              "fee",
+              "intake",
+              "requirement",
+              "application",
+              "scholarship",
+              "faq",
+              "policy",
+              "contact",
+              "location",
+              "accommodation",
+              "international_students",
+              "other"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "relevant": {
+          "type": "boolean"
+        },
+        "authority_level": {
+          "$ref": "00-common.schema.json#/$defs/authorityLevel"
+        },
+        "extractor_scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "institution",
+              "programme",
+              "fee",
+              "intake",
+              "requirement",
+              "application",
+              "scholarship",
+              "faq",
+              "policy",
+              "contact",
+              "location",
+              "accommodation",
+              "international_students",
+              "other"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "classification_confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reasoning_summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "00-common.schema.json#/$defs/error"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
