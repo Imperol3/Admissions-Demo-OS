@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/02a-extracted-fact.schema.json",
+  "title": "Extracted Fact Staging Record",
+  "type": "object",
+  "required": [
+    "fact_id",
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "source_id",
+    "entity_type",
+    "field_name",
+    "raw_value",
+    "source_evidence",
+    "extraction_confidence",
+    "resolution_status",
+    "created_at"
+  ],
+  "properties": {
+    "fact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "source_id": {
+      "$ref": "00-common.schema.json#/$defs/sourceId"
+    },
+    "temporary_entity_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "institution",
+        "programme",
+        "fee",
+        "intake",
+        "requirement",
+        "application_step",
+        "faq_policy",
+        "contact_location",
+        "scholarship"
+      ]
+    },
+    "field_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "raw_value": {},
+    "normalized_candidate": {},
+    "source_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_locator": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "extraction_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "canonical_entity_type": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "institution",
+        "programme",
+        "fee",
+        "intake",
+        "requirement",
+        "application_step",
+        "faq_policy",
+        "contact_location",
+        "scholarship",
+        null
+      ]
+    },
+    "canonical_entity_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resolution_status": {
+      "$ref": "00-common.schema.json#/$defs/resolutionStatus"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
