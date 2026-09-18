@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/05-programme.schema.json",
+  "title": "Canonical Programme",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "source_id",
+    "source_evidence",
+    "is_current",
+    "data_status",
+    "review_status",
+    "programme_id",
+    "name",
+    "active_status"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "source_id": {
+      "$ref": "00-common.schema.json#/$defs/sourceId"
+    },
+    "source_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "is_current": {
+      "type": "boolean"
+    },
+    "data_status": {
+      "$ref": "00-common.schema.json#/$defs/dataStatus"
+    },
+    "review_status": {
+      "$ref": "00-common.schema.json#/$defs/reviewStatus"
+    },
+    "approved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "programme_id": {
+      "type": "string"
+    },
+    "programme_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "parent_programme_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "programme_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "qualification": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "awarding_body": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "active_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "paused",
+        "retired",
+        "unknown"
+      ]
+    },
+    "duration_value": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "duration_unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "study_mode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "delivery_mode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "campus_or_location": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "application_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    }
+  },
+  "additionalProperties": false
+}
