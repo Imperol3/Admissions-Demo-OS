@@ -243,6 +243,8 @@ Every customer demo should be capable of following the same five-part narrative:
 - [`docs/DEMO-SCOPE.md`](docs/DEMO-SCOPE.md) — what is real, what is simulated, and what is explicitly out of scope
 - [`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md) — build order and acceptance criteria
 - [`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md) — standard prospect demo narrative and test scenarios
+- [`docs/onboarding/README.md`](docs/onboarding/README.md) — canonical onboarding/extraction contract, staging model and readiness rules
+- [`schemas/onboarding/README.md`](schemas/onboarding/README.md) — machine-readable JSON contracts for each onboarding stage and canonical entity
 
 ## MVP success criteria
 
