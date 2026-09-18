@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/05-requirement.schema.json",
+  "title": "Canonical Requirement",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "source_id",
+    "source_evidence",
+    "is_current",
+    "data_status",
+    "review_status",
+    "requirement_id",
+    "requirement_type",
+    "requirement_text"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "source_id": {
+      "$ref": "00-common.schema.json#/$defs/sourceId"
+    },
+    "source_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "is_current": {
+      "type": "boolean"
+    },
+    "data_status": {
+      "$ref": "00-common.schema.json#/$defs/dataStatus"
+    },
+    "review_status": {
+      "$ref": "00-common.schema.json#/$defs/reviewStatus"
+    },
+    "approved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requirement_id": {
+      "type": "string"
+    },
+    "programme_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "intake_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requirement_type": {
+      "type": "string"
+    },
+    "requirement_text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "admission_requirement_level": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "applies_to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "minimum_value": {
+      "type": [
+        "number",
+        "string",
+        "null"
+      ]
+    },
+    "unit_or_scale": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "accepted_alternatives": {
+      "type": [
+        "string",
+        "array",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
