@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/00-common.schema.json",
+  "title": "Admissions OS Onboarding Common Definitions",
+  "type": "object",
+  "$defs": {
+    "tenantId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "institutionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "onboardingRunId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stageStatus": {
+      "type": "string",
+      "enum": [
+        "success",
+        "partial",
+        "failed",
+        "needs_review"
+      ]
+    },
+    "dataStatus": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "missing",
+        "not_published",
+        "not_applicable",
+        "conflicting",
+        "needs_review",
+        "expired"
+      ]
+    },
+    "reviewStatus": {
+      "type": "string",
+      "enum": [
+        "not_reviewed",
+        "in_review",
+        "approved",
+        "rejected"
+      ]
+    },
+    "resolutionStatus": {
+      "type": "string",
+      "enum": [
+        "unresolved",
+        "matched",
+        "new_entity",
+        "ambiguous",
+        "reconciled",
+        "conflicting",
+        "rejected",
+        "needs_review"
+      ]
+    },
+    "authorityLevel": {
+      "type": "string",
+      "enum": [
+        "official_primary",
+        "official_secondary",
+        "internal_approved",
+        "partner",
+        "third_party"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "source_evidence"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/sourceId"
+        },
+        "source_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_locator": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "field": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recoverable": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
