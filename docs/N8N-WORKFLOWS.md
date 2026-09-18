@@ -41,6 +41,8 @@ The goal is to create a stable set of contracts that a minimal UI, Postman, curl
 
 ## Responsibilities
 
+The detailed machine contracts for classification, extraction, entity resolution, reconciliation, canonical writing and readiness are defined in [`schemas/onboarding/`](../schemas/onboarding/README.md). The human-readable stage contract is in [`docs/onboarding/EXTRACTION-PIPELINE.md`](onboarding/EXTRACTION-PIPELINE.md).
+
 ```text
 Validate input
     ↓
