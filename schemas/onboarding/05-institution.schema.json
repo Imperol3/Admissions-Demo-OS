@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admissions-os.local/schemas/onboarding/05-institution.schema.json",
+  "title": "Canonical Institution",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "institution_id",
+    "onboarding_run_id",
+    "institution_name",
+    "website",
+    "country",
+    "timezone",
+    "default_currency",
+    "onboarding_status",
+    "review_status"
+  ],
+  "properties": {
+    "tenant_id": {
+      "$ref": "00-common.schema.json#/$defs/tenantId"
+    },
+    "institution_id": {
+      "$ref": "00-common.schema.json#/$defs/institutionId"
+    },
+    "onboarding_run_id": {
+      "$ref": "00-common.schema.json#/$defs/onboardingRunId"
+    },
+    "institution_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "legal_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "website": {
+      "type": "string",
+      "format": "uri"
+    },
+    "primary_domain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "country": {
+      "type": "string"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "default_currency": {
+      "type": "string"
+    },
+    "institution_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "accreditation_or_regulator": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "admissions_email": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "email"
+    },
+    "admissions_phone": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "application_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "primary_contact_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "primary_contact_role": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "onboarding_status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "researching",
+        "building_kb",
+        "testing",
+        "ready",
+        "blocked",
+        "paused"
+      ]
+    },
+    "data_owner": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "human_reviewer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "registered_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "last_verified_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "approved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "review_status": {
+      "$ref": "00-common.schema.json#/$defs/reviewStatus"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
