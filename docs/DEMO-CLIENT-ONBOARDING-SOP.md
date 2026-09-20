@@ -1,9 +1,9 @@
 # Demo Client Onboarding SOP — Research Sheet to Retrieval-Ready Chunks
 
 **Status:** Working SOP for Admissions Demo OS  
-**Version:** 1.0  
-**Last updated:** 2026-09-08  
-**Reference implementation:** RCM Online College
+**Version:** 1.1  
+**Last updated:** 2026-09-20  
+**Reference implementations:** RCM Online College, Moringa School, Strathmore University
 
 ## Purpose
 
@@ -32,13 +32,21 @@ For the demo phase, the Google Sheet is the working onboarding and review surfac
 ```text
 Institution + website
         ↓
-AI research
+Source discovery / scrape
         ↓
-Client Onboarding Google Sheet
+Stage 1: classify page + relevance
         ↓
-Human review / conflict resolution
+Relevant source
         ↓
-Chunk Prep
+Stage 2: extract explicit facts
+        ↓
+Staging (audit observations)
+        ↓
+match / conflict / review
+        ↓
+accepted facts → canonical tabs
+        ↓
+Chunk Prep / automatic chunks
         ↓
 publish_ready = TRUE
         ↓
@@ -65,6 +73,7 @@ Expected tabs:
 
 - `Institution`
 - `Source Pages`
+- `Staging`
 - `Programmes`
 - `Fees`
 - `Intakes`
@@ -83,9 +92,21 @@ Not every institution will have every type of information. Missing data should r
 
 ---
 
-## 3. AI research pass
+## 3. AI research and extraction pass
 
-Given the institution name and official website, AI should research the institution end to end and populate the Sheet.
+Given the institution name and official website, AI/Astra should research the institution end to end.
+
+The onboarding run must not treat research output as canonical truth immediately. The run should:
+
+1. register/discover the source;
+2. classify the source;
+3. skip irrelevant sources;
+4. extract only explicit facts from relevant sources;
+5. write each extracted observation to `Staging`;
+6. compare observations for the same entity + field;
+7. promote accepted observations into the canonical tabs.
+
+The canonical tabs remain the working current-state knowledge model; `Staging` is the audit layer that records how those values were obtained.
 
 ### Primary research targets
 
@@ -118,6 +139,44 @@ AI should look for:
 - course access rules
 - other policies likely to affect student responses
 
+### Stage 1 — source classification
+
+For each source, Stage 1 returns only:
+
+```text
+page_type
+relevance
+relevance_level
+next_action
+reason
+```
+
+Stage 1 does not extract programmes, fees, dates, requirements, contacts, links or other detailed facts.
+
+Routing:
+
+```text
+relevant      → process
+irrelevant    → skip
+needs_review  → review
+```
+
+`relevance_level` measures usefulness to the admissions knowledge base, not the general importance of the webpage.
+
+### Stage 2 — fact extraction
+
+For relevant sources, extract only facts explicitly supported by the source. Missing facts stay missing; do not create placeholder observations such as `unknown`.
+
+One entity may produce many observations. Example:
+
+```text
+Bachelor of Commerce | programme_name | Bachelor of Commerce
+Bachelor of Commerce | duration       | 4 years
+Bachelor of Commerce | study_mode     | Full-time
+```
+
+Each observation must retain source evidence and provenance.
+
 ### Source rules
 
 1. Prefer official institution sources.
@@ -131,7 +190,94 @@ AI should look for:
 
 ---
 
-## 4. Human review gate
+
+## 4. Staging — mandatory audit step
+
+Every extracted observation must be written to the `Staging` tab as part of the same onboarding run before it is promoted to canonical tables.
+
+### Staging purpose
+
+Staging preserves:
+
+- what the source literally said;
+- the source URL / source ID;
+- the entity the fact belongs to;
+- the field and raw value;
+- the normalized candidate;
+- short source evidence;
+- extraction confidence;
+- match/conflict state;
+- resolution state;
+- the canonical record eventually created or updated.
+
+### Required Staging fields
+
+```text
+staging_id
+onboarding_run_id
+source_id
+source_url
+temporary_entity_id
+entity_type
+entity_name
+field_name
+raw_value
+normalized_value
+source_evidence
+extraction_confidence
+resolution_status
+canonical_entity_id
+canonical_table
+conflict_status
+extracted_at
+reviewed_at
+notes
+```
+
+Workflow-owned IDs must not be invented by the research model.
+
+### Observation comparison
+
+Compare observations using the same logical entity + field.
+
+```text
+no previous observation        → conflict_status = unique
+same normalized value          → conflict_status = match
+different normalized value     → conflict_status = conflict
+```
+
+For a conflict:
+
+```text
+resolution_status = needs_review
+```
+
+and create/update the corresponding item in `Conflicts & Review`.
+
+Do not silently choose between conflicting values.
+
+### Promotion rule
+
+Only observations with:
+
+```text
+resolution_status = accepted
+```
+
+may populate or update canonical tabs.
+
+After promotion, record:
+
+```text
+canonical_entity_id
+canonical_table
+```
+
+A conflict on one field does not block unrelated accepted facts for the same entity unless that conflict is marked blocking.
+
+---
+
+## 5. Human review gate
 
 AI should prepare the first version of the data, but the demo operator should validate the important facts before they are used for production-style retrieval.
 
@@ -162,7 +308,7 @@ Unresolved information must not become a publish-ready chunk when the uncertaint
 
 ---
 
-# 5. Preparing data for chunking
+# 6. Preparing data for chunking
 
 ## Core rule
 
@@ -179,7 +325,7 @@ The goal is that a useful chunk can be retrieved and understood on its own.
 
 ---
 
-## 6. Entity-based chunks
+## 7. Entity-based chunks
 
 Use an entity chunk when related data across several tabs describes the same programme/course.
 
@@ -239,7 +385,7 @@ This one chunk can support questions such as:
 
 ---
 
-## 7. Topic / intent chunks
+## 8. Topic / intent chunks
 
 Some knowledge should not be attached to one programme.
 
@@ -296,7 +442,7 @@ Combine fees that share the same validity period:
 
 ---
 
-# 8. Chunk grouping criteria
+# 9. Chunk grouping criteria
 
 Before combining records into one chunk, evaluate:
 
@@ -322,7 +468,7 @@ Do not combine unrelated information merely to create larger chunks.
 
 ---
 
-# 9. Freshness rules
+# 10. Freshness rules
 
 Time-sensitive information must retain its effective context.
 
@@ -352,7 +498,7 @@ Historical and current fees should not be flattened into one undated value.
 
 ---
 
-# 10. Conflict handling
+# 11. Conflict handling
 
 A chunk may still be generated for review when a conflict exists, but it must remain:
 
@@ -373,7 +519,7 @@ The chunk can include the caveat for human review, but the disputed fact must no
 
 ---
 
-# 11. `Chunk Prep` schema
+# 12. `Chunk Prep` schema
 
 Every demo onboarding Sheet should contain a `Chunk Prep` tab with:
 
@@ -404,7 +550,7 @@ The other fields are metadata for filtering, traceability, auditing and debuggin
 
 ---
 
-# 12. Publish-ready criteria
+# 13. Publish-ready criteria
 
 Set:
 
@@ -427,7 +573,7 @@ Only `publish_ready = TRUE` chunks should be pushed into the demo retrieval inde
 
 ---
 
-# 13. Embedding handoff
+# 14. Embedding handoff
 
 The next pipeline is intentionally simple:
 
@@ -463,7 +609,7 @@ Add effective/version metadata for time-sensitive knowledge when available.
 
 ---
 
-# 14. Retrieval validation
+# 15. Retrieval validation
 
 After embedding, use the `KB Test Questions` tab to test the institution.
 
@@ -494,14 +640,21 @@ A test is not successful merely because the AI produced a plausible answer. The 
 
 ---
 
-# 15. Demo client onboarding checklist
+# 16. Demo client onboarding checklist
 
 For every new demo client:
 
 ```text
 [ ] Duplicate Client Onboarding Template
 [ ] Add institution name + official website
-[ ] Run AI research
+[ ] Run source discovery / scrape
+[ ] Classify every source
+[ ] Skip irrelevant sources
+[ ] Extract explicit facts from relevant sources
+[ ] Write every extracted observation to Staging
+[ ] Compare entity + field observations for match/conflict
+[ ] Resolve or flag blocking conflicts
+[ ] Promote accepted observations to canonical tabs
 [ ] Populate source pages
 [ ] Populate programmes
 [ ] Populate fees
@@ -513,7 +666,8 @@ For every new demo client:
 [ ] Record scholarships or explicit knowledge gap
 [ ] Identify conflicts
 [ ] Human-review high-risk facts
-[ ] Build Chunk Prep
+[ ] Confirm accepted Staging rows are linked to canonical records
+[ ] Build / auto-populate Chunk Prep
 [ ] Review chunk grouping
 [ ] Resolve material conflicts
 [ ] Mark safe chunks publish_ready = TRUE
@@ -525,7 +679,7 @@ For every new demo client:
 
 ---
 
-# 16. Reference implementation: RCM Online College
+# 17. Reference implementation: RCM Online College
 
 RCM Online College was the first institution run through this manual demo onboarding method.
 
