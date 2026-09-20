@@ -10,27 +10,30 @@ Writing extractor output directly into `programmes`, fees, intakes or knowledge 
 - how an entity was resolved
 - why a canonical value was selected
 
-`extracted_facts` is therefore the immutable observation layer for an onboarding run.
+`Staging` is therefore the observation/audit layer for an onboarding run. In the Google Sheet workflow this is the `Staging` tab; in a database implementation the equivalent persistence table may be `extracted_facts`.
 
 ## Recommended record
 
 ```text
-fact_id
-tenant_id
-institution_id
+staging_id
 onboarding_run_id
 source_id
+source_url
 temporary_entity_id
 entity_type
+entity_name
 field_name
 raw_value
-normalized_candidate
+normalized_value
 source_evidence
-evidence_locator
 extraction_confidence
-canonical_entity_id
 resolution_status
-created_at
+canonical_entity_id
+canonical_table
+conflict_status
+extracted_at
+reviewed_at
+notes
 ```
 
 ## Suggested PostgreSQL shape
@@ -57,18 +60,32 @@ create table extracted_facts (
 );
 ```
 
-Recommended `resolution_status` values:
+Google Sheet `resolution_status` values:
 
 ```text
 unresolved
-matched
-new_entity
-ambiguous
-reconciled
-conflicting
+accepted
 rejected
 needs_review
 ```
+
+`conflict_status` values:
+
+```text
+unique
+match
+conflict
+not_checked
+```
+
+Rules:
+
+- no existing observation for the same logical entity + field -> `unique`
+- same normalized value -> `match`
+- different normalized value -> `conflict` and `needs_review`
+- only `accepted` observations may update canonical tables
+- after promotion, record `canonical_entity_id` and `canonical_table`
+- retain rejected/conflicting observations for audit instead of deleting them
 
 ## Current-state vs history
 
@@ -81,3 +98,23 @@ A future production model may preserve observations across refreshes for change 
 ## Non-negotiable provenance rule
 
 A canonical answerable fact should be able to name the extracted fact(s) and source(s) that support it.
+
+
+## Main onboarding-run rule
+
+Staging is not an optional post-processing report. It runs as part of the main onboarding flow:
+
+```text
+source classification
+  -> relevant source
+  -> fact extraction
+  -> Staging
+  -> match / conflict / review
+  -> accepted observations
+  -> canonical tables
+  -> chunks
+  -> embeddings
+  -> retrieval tests
+```
+
+The research agent may perform broad research itself, but every fact that becomes canonical should remain auditable through Staging and its source evidence.
