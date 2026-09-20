@@ -30,42 +30,45 @@ One source item with URL/title/content and crawl metadata.
 
 ### Output
 
-- primary `page_type`
-- all `information_types_found`
-- relevance
-- authority level
-- suggested extractor scope
-- warnings/errors
+Stage 1 is deliberately narrow. Return only:
 
-Recommended page types:
-
-```text
-institution
-programme
-programme_list
-fees
-admissions
-requirements
-intakes
-application
-faq
-policy
-contact
-scholarship
-campus
-accommodation
-international_students
-mixed
-general
-other
-irrelevant
+```json
+{
+  "page_type": "programme_listing",
+  "relevance": "relevant",
+  "relevance_level": "high",
+  "next_action": "process",
+  "reason": "Lists academic programmes offered by the institution."
+}
 ```
 
-A page has one primary type but may contain many information types.
+Allowed relevance values:
+
+```text
+relevant
+irrelevant
+needs_review
+```
+
+Allowed next actions:
+
+```text
+process
+skip
+review
+```
+
+Routing rule:
+
+```text
+relevant      -> process
+irrelevant    -> skip
+needs_review  -> review
+```
 
 ### Rule
 
-Classification routes extraction; it does not create canonical facts.
+Classification decides what the page is and whether it should continue. It must not extract detailed admissions facts or create canonical records.
 
 Schema: `01-source-classification.schema.json`.
 
@@ -115,19 +118,40 @@ Schema: `02-fact-extraction.schema.json`.
 
 ---
 
-## Stage 2A — Persist extracted facts
+## Stage 2A — Staging / persist extracted facts
 
-Every atomic observation is stored before canonicalization.
+Every atomic observation is written to the onboarding `Staging` layer as part of the same run before it can update a canonical table.
 
-This staging layer exists so we can audit:
+This layer is required for auditability:
 
 ```text
-canonical fact
-  -> reconciled observations
-  -> extracted fact
+canonical record
+  -> accepted Staging observation(s)
   -> source page
   -> source evidence
 ```
+
+For the Google Sheet onboarding workflow, use the `Staging` tab. Runtime/database implementations may persist the same contract in `extracted_facts`.
+
+Compare observations for the same logical entity + field:
+
+```text
+unique     = no previous observation
+match      = same normalized value
+conflict   = different normalized value
+not_checked
+```
+
+Resolution statuses used by the Sheet workflow:
+
+```text
+unresolved
+accepted
+rejected
+needs_review
+```
+
+Only `accepted` observations may promote to canonical tables. Conflicts must be retained and routed to `Conflicts & Review`; do not silently choose a winner.
 
 The detailed persistence contract is in [EXTRACTED-FACTS.md](EXTRACTED-FACTS.md).
 
@@ -135,7 +159,7 @@ Schema: `02a-extracted-fact.schema.json`.
 
 ---
 
-## Stage 3 — Entity resolution
+## Stage 3 — Entity matching and conflict detection
 
 ### Input
 
@@ -143,7 +167,9 @@ A candidate entity plus relevant existing canonical entities for the same tenant
 
 ### Output
 
-One of:
+At minimum, determine whether the observation belongs to an existing logical entity and whether the same entity + field already has another observation.
+
+Outputs may include:
 
 ```text
 matched
@@ -202,7 +228,7 @@ Schema: `04-reconciliation.schema.json`.
 
 ## Stage 5 — Canonical record writer
 
-Only reconciled data enters canonical entities.
+Only accepted/resolved Staging observations enter canonical entities.
 
 Canonical datasets:
 
