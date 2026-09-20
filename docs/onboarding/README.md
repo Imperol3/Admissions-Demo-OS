@@ -6,14 +6,15 @@ The onboarding pipeline is:
 
 ```text
 Source content
-  -> source classification
-  -> fact extraction
-  -> extracted-facts staging
-  -> entity resolution
-  -> normalization / reconciliation
+  -> source classification (relevant / irrelevant / review)
+  -> fact extraction for relevant sources
+  -> Staging audit observations
+  -> match / conflict / review
+  -> accepted observations
   -> canonical records
   -> completeness / readiness
-  -> KB build
+  -> automatic chunk build
+  -> embeddings
   -> retrieval validation
   -> human approval
 ```
@@ -39,6 +40,6 @@ Machine-readable JSON Schemas live in [../../schemas/onboarding/](../../schemas/
 
 ## Core rule
 
-> Extraction records what a source says. Reconciliation decides what the system currently accepts as canonical truth.
+> Extraction records what a source says. Staging preserves that observation. Only accepted observations may update canonical truth.
 
 An extractor must never silently overwrite a conflicting fact. Every answerable canonical fact must remain traceable to source evidence.
