@@ -372,6 +372,12 @@ export function KnowledgeWorkspace({
   const countMap = useMemo(() => new Map(counts.map((item) => [item.dataset, item.rows])), [counts]);
 
   useEffect(() => {
+    setQuery("");
+    setStatus("all");
+    setSelected(null);
+  }, [dataset, institutionSlug]);
+
+  useEffect(() => {
     if (!selected) return;
 
     const previousOverflow = document.body.style.overflow;
