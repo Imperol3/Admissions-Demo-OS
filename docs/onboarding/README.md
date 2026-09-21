@@ -35,6 +35,7 @@ Do not drop `tenant_id` from runtime persistence just because the human onboardi
 - [EXTRACTED-FACTS.md](EXTRACTED-FACTS.md) — staging/audit layer between source content and canonical truth.
 - [CANONICAL-DATA-MODEL.md](CANONICAL-DATA-MODEL.md) — canonical Admissions OS entities and relationships.
 - [READINESS-RULES.md](READINESS-RULES.md) — gates required before an institution can be marked ready.
+- [CREATE-INSTITUTION-WORKFLOW-PLAN.md](CREATE-INSTITUTION-WORKFLOW-PLAN.md) — node-by-node n8n plan for the `DEMO — Create Institution` workflow that runs this pipeline end to end.
 
 Machine-readable JSON Schemas live in [../../schemas/onboarding/](../../schemas/onboarding/README.md).
 
