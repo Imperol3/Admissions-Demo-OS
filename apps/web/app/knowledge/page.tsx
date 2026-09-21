@@ -1,19 +1,6 @@
 import { AppShell } from "@/components/app-shell";
-import { getKnowledgeRecords } from "@/lib/data";
+import { getKnowledgeRecords, knowledgeDatasets } from "@/lib/data";
 import { resolveWorkspace } from "@/lib/workspace";
-
-const datasets = [
-  "Programmes",
-  "Fees",
-  "Intakes",
-  "Requirements",
-  "Application Process",
-  "Scholarships",
-  "Contacts & Locations",
-  "Response Policy",
-  "Source Pages",
-  "Staging",
-];
 
 function primaryText(payload: Record<string, unknown>) {
   const candidates = [
@@ -25,6 +12,7 @@ function primaryText(payload: Record<string, unknown>) {
     payload.step_name,
     payload.page_title,
     payload.question_or_policy,
+    payload.entity_name,
   ];
   return String(candidates.find(Boolean) ?? "Knowledge record");
 }
@@ -35,7 +23,14 @@ export default async function KnowledgePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { params, institutions, activeInstitution } = await resolveWorkspace(searchParams);
-  const dataset = typeof params.dataset === "string" ? params.dataset : "Programmes";
+  const requestedDataset =
+    typeof params.dataset === "string" ? params.dataset : "Programmes";
+  const dataset = knowledgeDatasets.includes(
+    requestedDataset as (typeof knowledgeDatasets)[number],
+  )
+    ? requestedDataset
+    : "Programmes";
+
   const records = await getKnowledgeRecords(activeInstitution, dataset);
 
   return (
@@ -50,7 +45,7 @@ export default async function KnowledgePage({
 
       <div className="knowledge-layout">
         <aside className="knowledge-nav">
-          {datasets.map((item) => (
+          {knowledgeDatasets.map((item) => (
             <a
               key={item}
               className={item === dataset ? "knowledge-link active" : "knowledge-link"}
@@ -71,15 +66,15 @@ export default async function KnowledgePage({
 
           {records.length === 0 ? (
             <div className="empty-state">
-              <strong>No live records loaded.</strong>
-              <p>Configure the server Supabase secret to read this dataset.</p>
+              <strong>No records found for {dataset}.</strong>
+              <p>This dataset is connected to PostgreSQL but currently contains no published rows for {activeInstitution.name}.</p>
             </div>
           ) : (
             <div className="record-table">
               {records.map((record) => (
                 <article className="record-row" key={record.id}>
                   <div className="record-main">
-                    <strong>{primaryText(record.payload)}</strong>
+                    <strong>{primaryText(record.payload ?? {})}</strong>
                     <span>{record.record_key}</span>
                   </div>
                   <div className="record-meta">
