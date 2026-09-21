@@ -39,16 +39,22 @@ const publicKnowledgeDatasets = new Set<string>(knowledgeDatasets);
 export async function getInstitutions(): Promise<Institution[]> {
   return query<Institution>(`
     select
-      id::text,
-      slug,
-      name,
-      website,
-      status,
-      external_key,
-      last_synced_at::text
-    from public.demo_tenants
-    where status <> 'failed'
-    order by name
+      t.id::text,
+      t.slug,
+      t.name,
+      t.website,
+      t.status,
+      t.external_key,
+      t.last_synced_at::text
+    from public.demo_tenants t
+    where t.status <> 'failed'
+      and t.external_key is not null
+      and exists (
+        select 1
+        from public.published_sheet_records r
+        where r.tenant_id = t.id
+      )
+    order by t.last_synced_at desc nulls last, t.name
   `);
 }
 
@@ -59,7 +65,7 @@ export async function getInstitution(slug?: string): Promise<Institution> {
     institutions[0];
 
   if (!active) {
-    throw new Error("No institutions are available");
+    throw new Error("No synced institutions are available");
   }
 
   return active;
