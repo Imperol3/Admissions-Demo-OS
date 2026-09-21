@@ -20,19 +20,21 @@ export type KnowledgeRecord = {
   synced_at: string;
 };
 
-const publicKnowledgeDatasets = new Set([
+export const knowledgeDatasets = [
   "Programmes",
   "Fees",
   "Intakes",
   "Requirements",
   "Application Process",
   "FAQs & Policies",
-  "Response Policy",
-  "Contacts & Locations",
   "Scholarships",
+  "Contacts & Locations",
+  "Response Policy",
   "Source Pages",
   "Chunk Prep",
-]);
+] as const;
+
+const publicKnowledgeDatasets = new Set<string>(knowledgeDatasets);
 
 export async function getInstitutions(): Promise<Institution[]> {
   return query<Institution>(`
@@ -113,7 +115,7 @@ export async function getOverview(institution: Institution) {
       and dataset = any($2::text[])
     group by dataset
     order by rows desc, dataset
-  `, [institution.id, [...publicKnowledgeDatasets]]);
+  `, [institution.id, knowledgeDatasets]);
 
   const row = counts[0];
 
@@ -134,10 +136,7 @@ export async function getKnowledgeRecords(
   dataset = "Programmes",
   limit = 100,
 ): Promise<KnowledgeRecord[]> {
-  if (!publicKnowledgeDatasets.has(dataset)) {
-    throw new Error("Dataset is not available in the admissions knowledge view");
-  }
-
+  const safeDataset = publicKnowledgeDatasets.has(dataset) ? dataset : "Programmes";
   const safeLimit = Math.max(1, Math.min(limit, 250));
 
   return query<KnowledgeRecord>(`
@@ -154,5 +153,5 @@ export async function getKnowledgeRecords(
       and dataset = $2
     order by record_key
     limit $3
-  `, [institution.id, dataset, safeLimit]);
+  `, [institution.id, safeDataset, safeLimit]);
 }
