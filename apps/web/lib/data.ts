@@ -71,10 +71,23 @@ export async function getInstitution(slug?: string): Promise<Institution> {
   return active;
 }
 
-type DatasetCount = {
+export type DatasetCount = {
   dataset: string;
   rows: number;
 };
+
+export async function getKnowledgeDatasetCounts(
+  institution: Institution,
+): Promise<DatasetCount[]> {
+  return query<DatasetCount>(`
+    select dataset, count(*)::int as rows
+    from public.published_sheet_records
+    where tenant_id = $1
+      and dataset = any($2::text[])
+    group by dataset
+    order by dataset
+  `, [institution.id, knowledgeDatasets]);
+}
 
 export async function getOverview(institution: Institution) {
   const counts = await query<{
@@ -114,15 +127,7 @@ export async function getOverview(institution: Institution) {
          and embedding_status = 'pending') as pending_embeddings
   `, [institution.id]);
 
-  const datasets = await query<DatasetCount>(`
-    select dataset, count(*)::int as rows
-    from public.published_sheet_records
-    where tenant_id = $1
-      and dataset = any($2::text[])
-    group by dataset
-    order by rows desc, dataset
-  `, [institution.id, knowledgeDatasets]);
-
+  const datasets = await getKnowledgeDatasetCounts(institution);
   const row = counts[0];
 
   return {
@@ -133,7 +138,7 @@ export async function getOverview(institution: Institution) {
     facts: row?.facts ?? 0,
     chunks: row?.chunks ?? 0,
     pendingEmbeddings: row?.pending_embeddings ?? 0,
-    datasets,
+    datasets: [...datasets].sort((a, b) => b.rows - a.rows),
   };
 }
 
