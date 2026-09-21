@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   ArrowUpRight,
   BookOpen,
@@ -48,7 +49,7 @@ export default async function OverviewPage({
         <div>
           <div className="status-line">
             <span className="status-dot" />
-            {overview.live ? "Connected to live demo database" : "Preview data — add Supabase secret key for live mode"}
+            {overview.live ? "Connected to live PostgreSQL database" : "Database connection unavailable"}
           </div>
           <h1>{activeInstitution.name}</h1>
           <p>
@@ -56,12 +57,12 @@ export default async function OverviewPage({
             and the data published from onboarding.
           </p>
         </div>
-        <a
+        <Link
           className="secondary-button"
           href={`/knowledge?institution=${activeInstitution.slug}`}
         >
           Browse knowledge <ArrowUpRight size={16} />
-        </a>
+        </Link>
       </section>
 
       <section className="metric-grid">
@@ -102,13 +103,17 @@ export default async function OverviewPage({
           </div>
           <div className="dataset-list">
             {overview.datasets.slice(0, 8).map((item) => (
-              <div className="dataset-row" key={item.dataset}>
+              <Link
+                className="dataset-row dataset-row-link"
+                key={item.dataset}
+                href={`/knowledge?institution=${activeInstitution.slug}&dataset=${encodeURIComponent(item.dataset)}`}
+              >
                 <div>
                   <strong>{item.dataset}</strong>
                   <span>Published onboarding data</span>
                 </div>
                 <span className="count-pill">{item.rows}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </article>
