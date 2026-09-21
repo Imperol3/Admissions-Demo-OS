@@ -8,7 +8,8 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import type { DatasetCount, KnowledgeRecord } from "@/lib/data";
 
 type Props = {
@@ -341,6 +342,14 @@ function recordSearchText(record: KnowledgeRecord) {
   return JSON.stringify(record.payload ?? {}).toLowerCase();
 }
 
+function normalizeStatus(value: unknown) {
+  return text(value)
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function displaySyncDate(value: string | null) {
   if (!value) return "Not synced";
   return formatDate(value);
@@ -362,6 +371,23 @@ export function KnowledgeWorkspace({
   const programmes = useMemo(() => programmeMap(programmeRecords), [programmeRecords]);
   const countMap = useMemo(() => new Map(counts.map((item) => [item.dataset, item.rows])), [counts]);
 
+  useEffect(() => {
+    if (!selected) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setSelected(null);
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [selected]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return records.filter((record) => {
@@ -371,19 +397,20 @@ export function KnowledgeWorkspace({
       if (!matchesQuery) return false;
       if (status === "all") return true;
 
-      const statusText = [
-        record.data_status,
-        record.review_status,
-        record.payload?.data_status,
-        record.payload?.review_status,
-        record.payload?.embedding_status,
-        record.payload?.status,
-      ]
-        .map(text)
-        .join(" ")
-        .toLowerCase();
+      const statusText = normalizeStatus(
+        [
+          record.data_status,
+          record.review_status,
+          record.payload?.data_status,
+          record.payload?.review_status,
+          record.payload?.embedding_status,
+          record.payload?.status,
+        ]
+          .map(text)
+          .join(" "),
+      );
 
-      return statusText.includes(status.replace(/_/g, " "));
+      return statusText.includes(normalizeStatus(status));
     });
   }, [records, query, status]);
 
@@ -411,14 +438,15 @@ export function KnowledgeWorkspace({
 
       <section className="knowledge-summary">
         {["Programmes", "Fees", "Intakes", "Requirements", "Chunk Prep"].map((item) => (
-          <a
+          <Link
             key={item}
             href={`/knowledge?institution=${institutionSlug}&dataset=${encodeURIComponent(item)}`}
             className={item === dataset ? "knowledge-summary-card active" : "knowledge-summary-card"}
+            scroll={false}
           >
             <span>{item === "Chunk Prep" ? "Retrieval chunks" : item}</span>
             <strong>{countMap.get(item) ?? 0}</strong>
-          </a>
+          </Link>
         ))}
         <div className="knowledge-summary-total">
           <span>Knowledge records</span>
@@ -434,14 +462,15 @@ export function KnowledgeWorkspace({
               {group.items.map((item) => {
                 const count = countMap.get(item) ?? 0;
                 return (
-                  <a
+                  <Link
                     key={item}
                     href={`/knowledge?institution=${institutionSlug}&dataset=${encodeURIComponent(item)}`}
                     className={item === dataset ? "knowledge-nav-item active" : "knowledge-nav-item"}
+                    scroll={false}
                   >
                     <span>{item}</span>
                     <small>{count}</small>
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -512,7 +541,18 @@ export function KnowledgeWorkspace({
                   {filtered.map((record) => {
                     const cells = recordCells(dataset, record, programmes);
                     return (
-                      <tr key={record.id} onClick={() => setSelected(record)}>
+                      <tr
+                        key={record.id}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setSelected(record)}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            setSelected(record);
+                          }
+                        }}
+                      >
                         {cells.map((cell, index) => (
                           <td key={`${record.id}-${index}`} className={index === 0 ? "primary-cell" : ""}>
                             {index === 0 ? <strong>{cell}</strong> : cell}
@@ -531,14 +571,14 @@ export function KnowledgeWorkspace({
 
           <footer className="knowledge-table-footer">
             <span>{filtered.length} of {records.length} records</span>
-            <span>Click any row to inspect source and audit details</span>
+            <span>Click a row — or press Enter — to inspect source and audit details</span>
           </footer>
         </section>
       </div>
 
       {selected && (
-        <div className="knowledge-drawer-backdrop" onMouseDown={() => setSelected(null)}>
-          <aside className="knowledge-drawer" onMouseDown={(event) => event.stopPropagation()}>
+        <div className="knowledge-drawer-backdrop" onClick={() => setSelected(null)}>
+          <aside className="knowledge-drawer" onClick={(event) => event.stopPropagation()}>
             <header className="knowledge-drawer-header">
               <div>
                 <span>{dataset}</span>
@@ -566,7 +606,7 @@ export function KnowledgeWorkspace({
                           {isUrl ? (
                             <a href={text(value)} target="_blank" rel="noreferrer">
                               Open link <ExternalLink size={13} />
-                            </a>
+                            </Link>
                           ) : (
                             text(value)
                           )}
